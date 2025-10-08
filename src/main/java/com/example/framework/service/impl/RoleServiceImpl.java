@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.framework.constant.CommonConstant;
 import com.example.framework.entity.*;
 import com.example.framework.exception.BizException;
-import com.example.framework.handler.FilterInvocationSecurityMetadataSourceImpl;
+import com.example.framework.handler.CustomAuthorizationManagerImpl;
 import com.example.framework.mapper.*;
 import com.example.framework.model.dto.PageResultDTO;
 import com.example.framework.model.dto.RoleDTO;
@@ -43,13 +43,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     private RoleResourceService roleResourceService;
 
     @Autowired
-    private ResourceMapper resourceMapper;
-    @Autowired
-    private MenuMapper menuMapper ;
-    @Autowired
     private UserRoleMapper userRoleMapper;
-   @Autowired
-   private FilterInvocationSecurityMetadataSourceImpl filterInvocationSecurityMetadataSource;
+    @Autowired
+    private CustomAuthorizationManagerImpl customAuthorizationManager;
     @Override
     public List<UserRoleDTO> listUserRoles() {
         List<Role> roleList = roleMapper.selectList(new LambdaQueryWrapper<Role>()
@@ -98,7 +94,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                             .build())
                     .collect(Collectors.toList());
             roleResourceService.saveBatch(roleResourceList);
-            filterInvocationSecurityMetadataSource.clearDataSource();
+            customAuthorizationManager.clearDataSource();
         }
         if (Objects.nonNull(roleVO.getMenuIds())) {
             if (Objects.nonNull(roleVO.getId())) {
@@ -123,6 +119,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         if (count > 0) {
             throw new BizException("该角色下存在用户");
         }
-        roleMapper.deleteBatchIds(roleIdList);
+        roleMapper.deleteByIds(roleIdList);
     }
 }

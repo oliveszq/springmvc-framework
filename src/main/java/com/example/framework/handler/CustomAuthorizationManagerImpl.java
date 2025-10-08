@@ -68,8 +68,8 @@ public class CustomAuthorizationManagerImpl implements AuthorizationManager<Requ
 
         // 4. 处理无匹配资源的情况（根据业务决定：拒绝访问或允许访问）
         if (requiredRoles == null) {
-            // 例如：未配置的资源默认拒绝访问
-            return new AuthorizationDecision(false);
+            // 例如：未配置的资源默认访问
+            return new AuthorizationDecision(true);
         }
 
         // 5. 处理资源需要"disable"角色的情况（同原逻辑）

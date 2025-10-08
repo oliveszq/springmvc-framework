@@ -6,6 +6,7 @@ import com.example.framework.service.TokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -43,8 +45,8 @@ public class TokenServiceImpl implements TokenService {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         SecretKey secretKey = generalKey();
         return Jwts.builder().setId(getUuid()).setSubject(subject)
-                .setIssuer("oliveQ")
-                .signWith(signatureAlgorithm, secretKey).compact();
+                .setIssuer("olivesQ")
+                .signWith(secretKey, signatureAlgorithm).compact();
     }
 
     @Override
@@ -67,7 +69,11 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public Claims parseToken(String token) {
         SecretKey secretKey = generalKey();
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     @Override
@@ -91,8 +97,10 @@ public class TokenServiceImpl implements TokenService {
     }
 
     public SecretKey generalKey() {
-        byte[] encodedKey = Base64.getDecoder().decode(SECRET);
-        return new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
+        // 使用足够长的安全字符串
+        String secretString = "your-very-secure-secret-key-with-at-least-32-characters-here";
+        return Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
+
     }
 
 }

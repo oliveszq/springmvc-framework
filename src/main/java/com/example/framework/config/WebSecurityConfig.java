@@ -2,7 +2,6 @@ package com.example.framework.config;
 
 import com.example.framework.filter.JwtAuthenticationTokenFilter;
 import com.example.framework.handler.CustomAuthorizationManagerImpl;
-import com.example.framework.handler.FilterInvocationSecurityMetadataSourceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -41,10 +39,6 @@ public class WebSecurityConfig {
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
-    @Bean
-    public FilterInvocationSecurityMetadataSource securityMetadataSource() {
-        return new FilterInvocationSecurityMetadataSourceImpl();
-    }
 
     @Bean
     public AuthorizationManager customAuthorizationManager() {
@@ -80,7 +74,6 @@ public class WebSecurityConfig {
                                 .authenticationEntryPoint(authenticationEntryPoint)
                                 //访问被拒绝时的处理器
                                 .accessDeniedHandler(accessDeniedHandler))
-
                 //设置session为无状态，即不需要session来保存用户信息
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
