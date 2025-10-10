@@ -10,6 +10,7 @@ import com.example.framework.mapper.MenuMapper;
 import com.example.framework.mapper.RoleMenuMapper;
 import com.example.framework.model.dto.LabelOptionDTO;
 import com.example.framework.model.dto.MenuDTO;
+import com.example.framework.model.dto.UserDetailsDTO;
 import com.example.framework.model.dto.UserMenuDTO;
 import com.example.framework.model.vo.ConditionVO;
 import com.example.framework.model.vo.IsHiddenVO;
@@ -25,8 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.example.framework.constant.CommonConstant.COMPONENT;
-import static com.example.framework.constant.CommonConstant.TRUE;
+import static com.example.framework.constant.CommonConstant.*;
 
 /**
  * @author: qinglong
@@ -70,10 +70,15 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public List<UserMenuDTO> listUserMenus() {
-        List<Menu> menus = menuMapper.listMenusByUserInfoId(UserUtil.getUserDetailsDTO().getUserInfoId());
+        UserDetailsDTO userDetailsDTO = UserUtil.getUserDetailsDTO();
+        List<Menu> menus = new ArrayList<>();
+        if (userDetailsDTO.getIsSuperAdmin()) {
+            menus = menuMapper.selectList(new LambdaQueryWrapper<Menu>().eq(Menu::getIsHidden, FALSE));
+        }else {
+            menuMapper.listMenusByUserInfoId(userDetailsDTO.getUserInfoId());
+        }
         List<Menu> catalogs = listCatalogs(menus);
         Map<Integer, List<Menu>> childrenMap = getMenuMap(menus);
-
         return convertUserMenuList(catalogs,childrenMap);
     }
 

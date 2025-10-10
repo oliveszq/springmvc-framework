@@ -119,6 +119,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         if (count > 0) {
             throw new BizException("该角色下存在用户");
         }
+        // 删除角色对应的菜单
+        roleMenuService.remove(new LambdaQueryWrapper<RoleMenu>().in(RoleMenu::getRoleId, roleIdList));
+        // 删除角色对应的资源
+        roleResourceService.remove(new LambdaQueryWrapper<RoleResource>().in(RoleResource::getRoleId, roleIdList));
         roleMapper.deleteByIds(roleIdList);
     }
 }

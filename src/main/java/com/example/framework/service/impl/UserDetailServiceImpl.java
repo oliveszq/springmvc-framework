@@ -59,6 +59,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     public UserDetailsDTO convertUserDetail(UserAuth user, HttpServletRequest request) {
         UserInfo userInfo = userInfoMapper.selectById(user.getUserInfoId());
         List<String> roles = roleMapper.listRolesByUserInfoId(userInfo.getId());
+        Boolean isSuperAdmin = roleMapper.hasSuperAdmin(userInfo.getId());
         String ipAddress = IpUtil.getIpAddress(request);
         String ipSource = IpUtil.getIpSource(ipAddress);
         UserAgent userAgent = IpUtil.getUserAgent(request);
@@ -68,13 +69,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 .userInfoId(userInfo.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
+                .isSuperAdmin(isSuperAdmin)
                 .email(userInfo.getEmail())
                 .roles(roles)
                 .nickname(userInfo.getNickname())
                 .avatar(userInfo.getAvatar())
                 .intro(userInfo.getIntro())
-                .website(userInfo.getWebsite())
-                .isSubscribe(userInfo.getIsSubscribe())
                 .ipAddress(ipAddress)
                 .ipSource(ipSource)
                 .isDisable(userInfo.getIsDisable())

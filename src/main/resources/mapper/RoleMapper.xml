@@ -73,4 +73,13 @@
         LEFT JOIN t_role_menu rm on r.id = rm.role_id
         ORDER BY r.id
     </select>
+    <select id="hasSuperAdmin" resultType="java.lang.Boolean">
+        SELECT
+        COUNT(1) > 0
+        FROM
+        t_role
+        LEFT JOIN t_user_role ur ON t_role.id = ur.role_id
+        WHERE
+            is_super = 1 AND  ur.user_id = #{userInfoId}
+    </select>
 </mapper>

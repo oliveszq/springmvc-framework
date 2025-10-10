@@ -31,6 +31,9 @@ public class Role implements Serializable {
     @Schema(description = "角色名")
     private String roleName;
 
+    @Schema(description = "是否超级管理员")
+    private Integer isSuper;
+
     @Schema(description = "是否禁用  0否 1是")
     private Integer isDisable;
 

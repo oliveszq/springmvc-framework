@@ -33,6 +33,11 @@ export function generaMenu() {
   })
 }
 
+/**
+ * 动态加载视图组件的函数
+ * @param {string} view - 需要加载的视图组件路径
+ * @returns {function} 返回一个接收resolve函数的高阶函数，用于异步加载组件
+ */
 export const loadView = (view) => {
-  return (resolve) => require([`@/views${view}`], resolve)
+  return (resolve) => require([`@/views${view}`], resolve) // 使用require.ensure实现组件的异步加载
 }

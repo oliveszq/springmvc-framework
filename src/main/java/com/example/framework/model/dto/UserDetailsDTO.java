@@ -37,26 +37,48 @@ public class UserDetailsDTO implements UserDetails {
 
     private String password;
 
+    /**
+     * 是否为超级管理员
+     */
+    private Boolean isSuperAdmin;
+
     private List<String> roles;
 
+    /**
+     * 用户昵称
+     */
     private String nickname;
 
     private String avatar;
 
+    /**
+     * 用户简介
+     */
     private String intro;
 
-    private String website;
-
-    private Integer isSubscribe;
-
+    /**
+     * ip地址
+     */
     private String ipAddress;
 
+    /**
+     * ip来源
+     */
     private String ipSource;
 
+    /**
+     * 是否禁用
+     */
     private Integer isDisable;
 
+    /**
+     * 浏览器
+     */
     private String browser;
 
+    /**
+     * 操作系统
+     */
     private String os;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

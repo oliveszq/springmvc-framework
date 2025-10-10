@@ -19,6 +19,8 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     List<String> listRolesByUserInfoId(@Param("userInfoId") Integer userInfoId);
 
+    Boolean hasSuperAdmin(@Param("userInfoId") Integer userInfoId);
+
     List<ResourceRoleDTO> listResourceRoles();
 
     List<RoleDTO> listRoles(@Param("current") Long current,

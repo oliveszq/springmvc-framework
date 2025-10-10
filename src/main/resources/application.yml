@@ -4,7 +4,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost/blog?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost/graduation-design?useSSL=false&useUnicode=true&characterEncoding=UTF-8
     username: root
     password: "010629"
 
@@ -21,7 +21,7 @@ spring:
           min-idle: 10
   mail:
     host: smtp.qq.com
-    username: 2783123570@qq.com
+    username: xxxxxxx@qq.com
     password: gysosamophfkdegg
     default-encoding: UTF-8
     protocol: smtp
@@ -50,6 +50,7 @@ spring:
           enabled: true
           max-attempts: 3
           initial-interval: 3000
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -61,6 +62,7 @@ springdoc:
     - group: 'default'
       paths-to-match: '/**'
       packages-to-scan: com.example.framework
+
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:

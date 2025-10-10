@@ -46,6 +46,24 @@ public class CustomAuthorizationManagerImpl implements AuthorizationManager<Requ
      */
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
+        //  检查当前用户是否拥有所需角色（替代原AccessDecisionManager的决策逻辑）
+        Authentication auth = authentication.get();
+        if (auth == null || !auth.isAuthenticated()) {
+            return new AuthorizationDecision(false); // 未认证用户直接拒绝
+        }
+
+        // 提取用户拥有的角色
+        Collection<? extends GrantedAuthority> userAuthorities = auth.getAuthorities();
+        if (CollectionUtils.isEmpty(userAuthorities)) {
+            return new AuthorizationDecision(false); // 用户没有角色，拒绝访问
+        }
+        List<String> userRoles = userAuthorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+        if (userRoles.contains("admin")) {
+            return new AuthorizationDecision(true);
+        }
+
         // 1. 加载资源角色列表（如果为空则重新加载）
         if (CollectionUtils.isEmpty(resourceRoleList)) {
             this.loadResourceRoleList();
@@ -76,15 +94,6 @@ public class CustomAuthorizationManagerImpl implements AuthorizationManager<Requ
         if (requiredRoles.contains("disable")) {
             return new AuthorizationDecision(false);
         }
-
-        // 6. 检查当前用户是否拥有所需角色（替代原AccessDecisionManager的决策逻辑）
-        Authentication auth = authentication.get();
-        if (auth == null || !auth.isAuthenticated()) {
-            return new AuthorizationDecision(false); // 未认证用户直接拒绝
-        }
-
-        // 提取用户拥有的角色
-        Collection<? extends GrantedAuthority> userAuthorities = auth.getAuthorities();
         // 检查用户角色是否包含所需角色（至少一个匹配）
         List<String> finalRequiredRoles = requiredRoles;
         boolean hasRequiredRole = userAuthorities.stream()
