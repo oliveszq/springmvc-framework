@@ -33,6 +33,7 @@ build/
 
 ### VS Code ###
 .vscode/
+/admin-ui/node_modules
 
 ### Mac OS ###
 .DS_Store
